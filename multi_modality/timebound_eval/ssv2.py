@@ -182,19 +182,24 @@ def group_correct(sim):
 if __name__ == "__main__":
 
     # Load config
+    config_name = "l16"
     config = Config.from_file(
-        filepath=os.path.join(repo_path, "exp/zero_shot/ret_msrvtt/b16.py"),
+        filepath=os.path.join(repo_path, f"exp/zero_shot/ret_msrvtt/{config_name}.py"),
     )
 
     # Setup path to pre-trained checkpoint
     ckpt_root = "/work/piyush/pretrained_checkpoints/LargeModels/UnmaskedTeachers/"
-    config.pretrained_path = os.path.join(ckpt_root, "b16_25m.pth")
+    ckpt_name = "l16_25m"
+    stage_1_ckpt_name = "l16_ptk710_f8_res224.pth"
+    config.pretrained_path = os.path.join(ckpt_root, f"{ckpt_name}.pth")
     config.model.vision_encoder.pretrained = os.path.join(
-        ckpt_root, "b16_ptk710_f8_res224.pth",
+        ckpt_root, stage_1_ckpt_name,
     )
 
     # Define the text encoder
-    config.model.text_encoder = TextEncoders["bert"]
+    text_model_name = "bert"
+    text_model_name = "bert_large" # For large model
+    config.model.text_encoder = TextEncoders[text_model_name]
 
     # Define number of frames
     config.model.vision_encoder.num_frames = config.num_frames
